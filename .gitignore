@@ -1,0 +1,15 @@
+*.pdf
+*.docx
+*.pyc
+*.zip
+debug.csv
+temp.csv
+logs
+models
+model.png
+*_profile_report.html
+.ipynb_checkpoints
+
+!CQF Final Project Report.docx
+!DL Chuanlin Zhao REPORT.pdf
+!DL Chuanlin Zhao Declaration.pdf
