@@ -100,6 +100,34 @@ class ConditionTransition:
     @property
     def transition(self):
         return self._transits
+    
+class StateMachineBase:
+    def __init__(self, name: str) -> None:
+        self.__name = name
+        self.__inputs = {}
+        self.__outputs = {}
+
+        # If defined in an AtomicState, it will only handle the action triggered in that AtomicState 
+        # if defined in the Automata, it will handle the actions in all its states
+        self.__transitions = {}
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    def add_input(self, input: Input) -> None:
+        self.__inputs[input.name] = input.value_dict()
+
+    def add_output(self, name: str, value: str, store_context: bool) -> None:
+        if store_context:
+            name = "context." + name
+        self.__outputs[name] = "{{" + value + "}}"
+
+    def transit(self, action, new_state: str | ConditionTransition) -> None:
+        if isinstance(action, Action):
+            action = action.name
+        self.__transitions[action] = new_state
+
 
 
 class AtomicState:
