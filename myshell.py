@@ -13,7 +13,7 @@ class ModuleType(Enum):
     GoogleSearchModule = 5
 
 
-class Action(Enum):
+class Trigger(Enum):
     # triggered when the user sends a message
     CHAT = 1
     # triggered when an AtomicState has finished. Usually used to connect two consecutive states.
@@ -132,11 +132,11 @@ class StateMachineBase:
             
         self._outputs[name] = value
 
-    def transit(self, action, new_state: str | ConditionTransition | Enum) -> None:
-        if isinstance(action, Action):
-            action = action.name
+    def transit(self, trigger, new_state: str | ConditionTransition | Enum) -> None:
+        if isinstance(trigger, Trigger):
+            trigger = trigger.name
 
-        self._transitions[action] = new_state.name if isinstance(new_state, Enum) else new_state
+        self._transitions[trigger] = new_state.name if isinstance(new_state, Enum) else new_state
 
 
 class AtomicState(StateMachineBase):

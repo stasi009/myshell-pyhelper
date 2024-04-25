@@ -1,6 +1,6 @@
 # https://docs.myshell.ai/product-manual/create/pro-config-mode-beta/tutorial/building-workflow
 
-from myshell import Button, Render, AtomicState, Input, InputType, Automata, Module, ModuleType, Action
+from myshell import Button, Render, AtomicState, Input, InputType, Automata, Module, ModuleType, Trigger
 
 
 class Builder:
@@ -47,7 +47,7 @@ class Builder:
 
     def __add_transitions(self):
         # CHAT: when a user sends a message, automata will jump into  chat_page_state and execute that state
-        self._state.transit(Action.CHAT, "chat_page_state")
+        self._state.transit(Trigger.CHAT, "chat_page_state")
 
     def run(self):
         self.__add_inputs()

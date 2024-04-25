@@ -48,7 +48,7 @@ class HomepageState:
         )
         self._state.render(render)
 
-        self._state.transit(action="start_chat", new_state=States.intro_message_state)
+        self._state.transit(trigger="start_chat", new_state=States.intro_message_state)
         return self._state
 
 
@@ -67,7 +67,7 @@ class IntroMessageState:
         )
         self._state.render(render)
 
-        self._state.transit(action=Action.CHAT, new_state=States.chat_page_state)
+        self._state.transit(trigger=Trigger.CHAT, new_state=States.chat_page_state)
         return self._state
 
 
@@ -125,7 +125,7 @@ class ChatPageState:
             store_context=True,
         )
 
-        self._state.transit(action=Action.CHAT, new_state=States.chat_page_state)
+        self._state.transit(trigger=Trigger.CHAT, new_state=States.chat_page_state)
         return self._state
 
 
@@ -140,7 +140,7 @@ def main():
     automata.add_state(ChatPageState().build(), initial=False)
 
     # Transition defined in the Automata, it will handle the actions in all its states
-    automata.transit(action="go_home", new_state=States.home_page_state)
+    automata.transit(trigger="go_home", new_state=States.home_page_state)
 
     automata.compile(Path(__file__).with_suffix(".json"))
 

@@ -15,7 +15,7 @@ def test_render():
 
 def test_atomic_state():
     state = AtomicState(name="home_page_state")
-    state.transit(action="start_demo", new_state="home_page_state")
+    state.transit(trigger="start_demo", new_state="home_page_state")
 
     # ------- create render
     render = Render()
@@ -65,7 +65,7 @@ class TestAtomicState1:
         self._state.render(render)
         
     def __add_transitions(self):
-        self._state.transit(action='start_demo',new_state='home_page_state')
+        self._state.transit(trigger='start_demo',new_state='home_page_state')
         
     def run(self):
         """ inputs -> tasks -> outputs -> render
