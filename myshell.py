@@ -2,6 +2,15 @@ from dataclasses import dataclass, asdict
 from typing import Any
 from pathlib import Path
 import json
+from enum import Enum
+
+
+class ModuleType(Enum):
+    AnyWidget = 1
+    LLM = 2
+    LLMFunction = 3
+    Tts = 4
+    GoogleSearch = 5
 
 
 @dataclass
@@ -40,7 +49,7 @@ class Input:
     # If user_input is false, user will not be prompted to input via a form,
     # a new variable with the value of default_value will be automatically generated
     user_input: bool
-    default_value: str
+    default_value: str = ""
 
     def __post_init__(self):
         if self.type not in ("text", "IM"):
@@ -51,28 +60,27 @@ class Input:
         del d["name"]
         return d
 
+
 @dataclass
 class Module:
     name: str
-    module_type: str
+    module_type: ModuleType
     module_config: dict[str, str]
 
-    def __post_init__(self):
-        if self.module_type not in (
-            "AnyWidgetModule",
-            "LLMModule",
-            "LLMFunctionModule",
-            "TtsModule",
-            "GoogleSearchModule",
-        ):
-            raise ValueError("Unsupported Module Type")
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "module_type": self.module_type.name,
+            "module_config": self.module_config,
+        }
+
 
 class AtomicState:
     def __init__(self, name: str) -> None:
         self.__name = name
         self.__inputs = {}
         self.__outputs = {}
-        self.__tasks = [] # Tasks contain multiple modules that execute sequentially
+        self.__tasks = []  # Tasks contain multiple modules that execute sequentially
         self.__render: Render = None
         self.__transitions = {}
 
@@ -88,12 +96,10 @@ class AtomicState:
 
     def add_input(self, input: Input) -> None:
         self.__inputs[input.name] = input.value_dict()
-        
-    def add_task(self,module:Module):
-        """ Tasks contain multiple modules that execute sequentially
-        """
-        self.__tasks.append(asdict(module))
-        
+
+    def add_task(self, module: Module):
+        """Tasks contain multiple modules that execute sequentially"""
+        self.__tasks.append(module.to_dict())
 
     def add_output(self, name: str, value: str, store_context: bool) -> None:
         if store_context:
@@ -109,6 +115,7 @@ class AtomicState:
             "render": self.__render.to_dict(),
             "transitions": self.__transitions,
         }
+
 
 class Automata:
     def __init__(self, name) -> None:
