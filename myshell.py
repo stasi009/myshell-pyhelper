@@ -6,11 +6,11 @@ from enum import Enum
 
 
 class ModuleType(Enum):
-    AnyWidget = 1
-    LLM = 2
-    LLMFunction = 3
-    Tts = 4
-    GoogleSearch = 5
+    AnyWidgetModule = 1
+    LLMModule = 2
+    LLMFunctionModule = 3
+    TtsModule = 4
+    GoogleSearchModule = 5
 
 
 class Action(Enum):
