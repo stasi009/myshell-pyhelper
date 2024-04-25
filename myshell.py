@@ -100,89 +100,63 @@ class ConditionTransition:
     @property
     def transition(self):
         return self._transits
-    
+
+
 class StateMachineBase:
     def __init__(self, name: str) -> None:
-        self.__name = name
-        self.__inputs = {}
-        self.__outputs = {}
+        self._name = name
+        self._inputs = {}
+        self._outputs = {}
 
-        # If defined in an AtomicState, it will only handle the action triggered in that AtomicState 
+        # If defined in an AtomicState, it will only handle the action triggered in that AtomicState
         # if defined in the Automata, it will handle the actions in all its states
-        self.__transitions = {}
+        self._transitions = {}
 
     @property
     def name(self) -> str:
-        return self.__name
+        return self._name
 
     def add_input(self, input: Input) -> None:
-        self.__inputs[input.name] = input.value_dict()
+        self._inputs[input.name] = input.value_dict()
 
     def add_output(self, name: str, value: str, store_context: bool) -> None:
         if store_context:
             name = "context." + name
-        self.__outputs[name] = "{{" + value + "}}"
+        self._outputs[name] = "{{" + value + "}}"
 
     def transit(self, action, new_state: str | ConditionTransition) -> None:
         if isinstance(action, Action):
             action = action.name
-        self.__transitions[action] = new_state
+        self._transitions[action] = new_state
 
 
-
-class AtomicState:
+class AtomicState(StateMachineBase):
     def __init__(self, name: str) -> None:
-        self.__name = name
-        self.__inputs = {}
-        self.__outputs = {}
+        super().__init__(name)
         self.__tasks = []  # Tasks contain multiple modules that execute sequentially
         self.__render: Render = None
-        # If a transition is defined in an AtomicState, 
-        # it will only handle the action triggered in that AtomicState 
-        self.__transitions = {}
-
-    @property
-    def name(self) -> str:
-        return self.__name
-
-    def add_input(self, input: Input) -> None:
-        self.__inputs[input.name] = input.value_dict()
 
     def add_task(self, module: Module):
         """Tasks contain multiple modules that execute sequentially"""
         self.__tasks.append(module.to_dict())
 
-    def add_output(self, name: str, value: str, store_context: bool) -> None:
-        if store_context:
-            name = "context." + name
-        self.__outputs[name] = "{{" + value + "}}"
-
     def render(self, render: Render) -> None:
         self.__render = render
-
-    def transit(self, action, new_state: str | ConditionTransition) -> None:
-        if isinstance(action, Action):
-            action = action.name
-        self.__transitions[action] = new_state
 
     def to_dict(self) -> dict[str, Any]:
         """inputs -> tasks -> outputs -> render"""
         return {
-            "inputs": self.__inputs,
+            "inputs": self._inputs,
             "tasks": self.__tasks,
-            "outputs": self.__outputs,
+            "outputs": self._outputs,
             "render": self.__render.to_dict(),
-            "transitions": self.__transitions,
+            "transitions": self._transitions,
         }
 
 
-class Automata:
+class Automata(StateMachineBase):
     def __init__(self, name) -> None:
-        self.__name = name
-        self.__inputs = {}
-        self.__outputs = {}
-        # if a transition is defined in the Automata, it will handle the actions in all its states
-        self.__transitions = {}
+        super().__init__(name)
         self.__states = {}
 
     def add_state(self, state: AtomicState, initial: bool) -> None:
@@ -193,11 +167,11 @@ class Automata:
     def to_dict(self) -> dict[str, Any]:
         return {
             "type": "automata",
-            "id": self.__name,
+            "id": self._name,
             "initial": self.__init_state,
-            "inputs": {},
-            "outputs": {},
-            "transitions": {},
+            "inputs": self._inputs,
+            "outputs": self._outputs,
+            "transitions": self._transitions,
             "states": self.__states,
         }
 
