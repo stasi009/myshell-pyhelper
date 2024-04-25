@@ -120,9 +120,17 @@ class StateMachineBase:
         self._inputs[input.name] = input.value_dict()
 
     def add_output(self, name: str, value: str, store_context: bool) -> None:
+        """
+        - Referring to a variable defined within an AutomicState:we can directly use variable name to refer to that variable
+        - Passing a variable across different AutomicStates: must set store_context to be True
+        """
         if store_context:
             name = "context." + name
-        self._outputs[name] = "{{" + value + "}}"
+            
+        if not value.startswith("{{"):
+            value = "{{" + value + "}}"
+            
+        self._outputs[name] = value
 
     def transit(self, action, new_state: str | ConditionTransition | Enum) -> None:
         if isinstance(action, Action):
@@ -159,6 +167,10 @@ class Automata(StateMachineBase):
     def __init__(self, name) -> None:
         super().__init__(name)
         self.__states = {}
+        self.__context = {}
+        
+    def add_global_var(self,name,value=''):
+        self.__context[name] = value
 
     def add_state(self, state: AtomicState, initial: bool) -> None:
         self.__states[state.name] = state.to_dict()
