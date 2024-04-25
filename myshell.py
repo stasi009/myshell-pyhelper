@@ -109,7 +109,7 @@ class StateMachineBase:
         self._outputs = {}
 
         # If defined in an AtomicState, it will only handle the action triggered in that AtomicState
-        # if defined in the Automata, it will handle the actions in all its states
+        # If defined in the Automata, it will handle the actions in all its states
         self._transitions = {}
 
     @property
@@ -124,15 +124,16 @@ class StateMachineBase:
             name = "context." + name
         self._outputs[name] = "{{" + value + "}}"
 
-    def transit(self, action, new_state: str | ConditionTransition) -> None:
+    def transit(self, action, new_state: str | ConditionTransition | Enum) -> None:
         if isinstance(action, Action):
             action = action.name
-        self._transitions[action] = new_state
+
+        self._transitions[action] = new_state.name if isinstance(new_state, Enum) else new_state
 
 
 class AtomicState(StateMachineBase):
-    def __init__(self, name: str) -> None:
-        super().__init__(name)
+    def __init__(self, name: str | Enum) -> None:
+        super().__init__(name.name if isinstance(name, Enum) else name)
         self.__tasks = []  # Tasks contain multiple modules that execute sequentially
         self.__render: Render = None
 
