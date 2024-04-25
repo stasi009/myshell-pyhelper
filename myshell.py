@@ -13,6 +13,20 @@ class ModuleType(Enum):
     GoogleSearch = 5
 
 
+class Action(Enum):
+    # triggered when the user sends a message
+    CHAT = 1
+    # triggered when an AtomicState has finished. Usually used to connect two consecutive states.
+    ALWAYS = 2
+    # triggered when an Automata is finished
+    DONE = 3
+
+
+class InputType(Enum):
+    text = 1  # user will be prompted to input data
+    IM = 2  # This allows the bot to take input in the form of messages sent to the bot.
+
+
 @dataclass
 class Button:
     content: str
@@ -26,6 +40,9 @@ class Render:
 
     def add_text(self, text: str):
         self._renders["text"] = text
+
+    def add_audio(self, text: str):
+        self._renders["audio"] = text
 
     def add_button(self, btn: Button):
         btn_list = None
@@ -43,21 +60,23 @@ class Render:
 @dataclass
 class Input:
     name: str
-    # 'text': user will be prompted to input data
-    # 'IM' : user needs to type in the chat to provide an input.
-    type: str
+    type: InputType
     # If user_input is false, user will not be prompted to input via a form,
     # a new variable with the value of default_value will be automatically generated
     user_input: bool
-    default_value: str = ""
+    default_value: str = None
 
     def __post_init__(self):
         if self.type not in ("text", "IM"):
             raise ValueError("input type can only be text or IM")
 
     def value_dict(self) -> dict[str, Any]:
-        d = asdict(self)
-        del d["name"]
+        d = {
+            "type": self.type.name,
+            "user_input": self.user_input,
+        }
+        if self.default_value is not None:
+            d["default_value"] = self.default_value
         return d
 
 
@@ -92,6 +111,8 @@ class AtomicState:
         return self.__name
 
     def transit(self, action, new_state):
+        if isinstance(action, Action):
+            action = action.name
         self.__transitions[action] = new_state
 
     def add_input(self, input: Input) -> None:

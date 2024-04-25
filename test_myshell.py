@@ -1,4 +1,4 @@
-from myshell import Button, Render, AtomicState, Input, Automata
+from myshell import Button, Render, AtomicState, Input,InputType, Automata
 import json
 
 
@@ -37,7 +37,7 @@ class TestAtomicState1:
     def __add_inputs(self):
         intro_message = Input(
             name="intro_message",
-            type="text",
+            type=InputType.text,
             user_input=True,
             default_value="Hi, this is your Pro Config Tutorial Bot",
         )
@@ -45,7 +45,7 @@ class TestAtomicState1:
 
         tts_widget_url = Input(
             name="tts_widget_url",
-            type="text",
+            type=InputType.text,
             user_input=True,
             default_value="https://app.myshell.ai/widget/mEjUNr",
         )
