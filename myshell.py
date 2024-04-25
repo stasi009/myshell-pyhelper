@@ -78,12 +78,36 @@ class AtomicState:
         self.__outputs[name] = "{{" + value + "}}"
 
     def to_dict(self) -> dict[str, Any]:
-        """ inputs -> tasks -> outputs -> render
-        """
+        """inputs -> tasks -> outputs -> render"""
         return {
             "inputs": self.__inputs,
             "tasks": self.__tasks,
             "outputs": self.__outputs,
             "render": self.__render.to_dict(),
             "transitions": self.__transitions,
+        }
+
+
+class Automata:
+    def __init__(self, name) -> None:
+        self.__name = name
+        self.__inputs = {}
+        self.__outputs = {}
+        self.__transitions = {}
+        self.__states = {}
+        
+    def add_state(self,state:AtomicState,initial:bool) -> None:
+        self.__states[state.name] = state.to_dict()
+        if initial:
+            self.__init_state = state.name
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "type": "automata",
+            "id": self.__name,
+            "initial":self.__init_state,
+            "inputs": {},
+            "outputs": {},
+            "transitions": {},
+            "states":self.__states
         }

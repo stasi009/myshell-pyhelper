@@ -1,4 +1,4 @@
-from myshell import Button, Render, AtomicState, Input
+from myshell import Button, Render, AtomicState, Input, Automata
 import json
 
 
@@ -75,7 +75,10 @@ class TestAtomicState1:
         self.__render()
         self.__add_transitions()
         
-        print(json.dumps(self._state.to_dict(), indent=4))
+        automata = Automata(name='hello_demo')
+        automata.add_state(self._state,initial=True)
+        
+        print(json.dumps(automata.to_dict(), indent=4))
 
 
 if __name__ == "__main__":
