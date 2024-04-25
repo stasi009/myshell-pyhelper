@@ -16,7 +16,31 @@ class HomepageState:
     def __init__(self) -> None:
         self._state = AtomicState(name=States.home_page_state)
 
+    def __add_inputs(self):
+        self._state.add_input(
+            Input(
+                name="intro_message",
+                type=InputType.text,
+                user_input=True,
+                default_value="Hi, this is your Pro Config Tutorial Bot, how can I assist you today",
+            )
+        )
+
+        self._state.add_input(
+            Input(
+                name="tts_widget_id",
+                type=InputType.text,
+                user_input=True,
+                default_value="1743159010695057408",
+            )
+        )
+
     def build(self):
+        self.__add_inputs()
+
+        for name in ["intro_message", "tts_widget_id"]:
+            self._state.add_output(name=name, value=name, store_context=True)
+
         render = Render()
         render.add_text("Click 'Start' to chat!")
         render.add_button(
@@ -33,6 +57,8 @@ class IntroMessageState:
         self._state = AtomicState(States.intro_message_state)
 
     def build(self):
+        self._state.add_output(name="memory", value="[]", store_context=True)
+
         render = Render()
         render.add_text("Hi, welcome to the Pro Config tutorial. How can I assist you today?")
         render.add_button(
@@ -58,6 +84,7 @@ class ChatPageState:
                     "widget_id": "1744214024104448000",
                     "system_prompt": "You are a teacher teaching Pro Config.",
                     "user_prompt": "{{user_message}}",
+                    "memory": "{{context.memory}}",
                     "output_name": "reply",
                 },
             )
@@ -69,7 +96,7 @@ class ChatPageState:
                 module_type=ModuleType.AnyWidgetModule,
                 module_config={
                     "content": "{{reply}}",
-                    "widget_id": "1743159010695057408",
+                    "widget_id": "{{context.tts_widget_id}}",
                     "output_name": "reply_voice",
                 },
             )
@@ -87,8 +114,17 @@ class ChatPageState:
 
     def build(self):
         self._state.add_input(Input(name="user_message", type=InputType.IM, user_input=True))
+
         self.__add_tasks()
+
         self.__render()
+
+        self._state.add_output(
+            name="memory",
+            value="{{[...context.memory, {'user': user_message}, {'assistant': reply}]}}",
+            store_context=True,
+        )
+
         self._state.transit(action=Action.CHAT, new_state=States.chat_page_state)
         return self._state
 
@@ -98,8 +134,6 @@ def main():
 
     for name in ["intro_message", "tts_widget_id", "memory"]:
         automata.declare_global_var(name)
-
-    automata.declare_global_var()
 
     automata.add_state(HomepageState().build(), initial=True)
     automata.add_state(IntroMessageState().build(), initial=False)

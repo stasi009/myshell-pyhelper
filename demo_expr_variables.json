@@ -1,0 +1,113 @@
+{
+  "type": "automata",
+  "id": "variable_expression_demo",
+  "initial": "home_page_state",
+  "inputs": {},
+  "outputs": {},
+  "context": {
+    "intro_message": "",
+    "tts_widget_id": "",
+    "memory": ""
+  },
+  "transitions": {
+    "go_home": "home_page_state"
+  },
+  "states": {
+    "home_page_state": {
+      "inputs": {
+        "intro_message": {
+          "type": "text",
+          "user_input": true,
+          "default_value": "Hi, this is your Pro Config Tutorial Bot, how can I assist you today"
+        },
+        "tts_widget_id": {
+          "type": "text",
+          "user_input": true,
+          "default_value": "1743159010695057408"
+        }
+      },
+      "outputs": {
+        "context.intro_message": "{{intro_message}}",
+        "context.tts_widget_id": "{{tts_widget_id}}"
+      },
+      "render": {
+        "text": "Welcome to this demo. Click 'Start' to chat!",
+        "buttons": [
+          {
+            "content": "Start Chat",
+            "description": "Click to Start Chatting.",
+            "on_click": "start_chat"
+          }
+        ]
+      },
+      "transitions": {
+        "start_chat": "intro_message_state"
+      }
+    },
+    "intro_message_state": {
+      "render": {
+        "text": "{{context.intro_message}}",
+        "buttons": [
+          {
+            "content": "Home",
+            "description": "Click to Go Back to Home.",
+            "on_click": "go_home"
+          }
+        ]
+      },
+      "outputs": {
+        "context.memory": "{{[]}}"
+      },
+      "transitions": {
+        "CHAT": "chat_page_state"
+      }
+    },
+    "chat_page_state": {
+      "inputs": {
+        "user_message": {
+          "type": "IM",
+          "user_input": true
+        }
+      },
+      "tasks": [
+        {
+          "name": "generate_reply",
+          "module_type": "AnyWidgetModule",
+          "module_config": {
+            "widget_id": "1744214024104448000",
+            "system_prompt": "You are a teacher teaching Pro Config.",
+            "user_prompt": "{{user_message}}",
+            "memory": "{{context.memory}}",
+            "output_name": "reply"
+          }
+        },
+        {
+          "name": "generate_voice",
+          "module_type": "AnyWidgetModule",
+          "module_config": {
+            "content": "{{reply}}",
+            "widget_id": "{{context.tts_widget_id}}",
+            "output_name": "reply_voice"
+          }
+        }
+      ],
+      "outputs": {
+        "context.memory": "{{[...context.memory, {'user': user_message}, {'assistant': reply}]}}"
+      },
+      "render": {
+        "text": "{{reply}}",
+        "audio": "{{reply_voice}}",
+        "buttons": [
+          {
+            "content": "Home",
+            "description": "Click to Go Back to Home.",
+            "on_click": "go_home"
+          }
+        ]
+      },
+      "transitions": {
+        "CHAT": "chat_page_state"
+      }
+    }
+  }
+}
