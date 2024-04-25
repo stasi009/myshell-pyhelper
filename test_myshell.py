@@ -41,7 +41,7 @@ class TestAtomicState1:
             user_input=True,
             default_value="Hi, this is your Pro Config Tutorial Bot",
         )
-        self._state.input(intro_message)
+        self._state.add_input(intro_message)
 
         tts_widget_url = Input(
             name="tts_widget_url",
@@ -49,11 +49,11 @@ class TestAtomicState1:
             user_input=True,
             default_value="https://app.myshell.ai/widget/mEjUNr",
         )
-        self._state.input(tts_widget_url)
+        self._state.add_input(tts_widget_url)
         
     def __add_outputs(self):
-        self._state.output(name='intro_message',value='intro_message',store_context=False)
-        self._state.output(name='voice_id',value='tts_widget_url',store_context=False)
+        self._state.add_output(name='intro_message',value='intro_message',store_context=False)
+        self._state.add_output(name='voice_id',value='tts_widget_url',store_context=False)
         
     def __render(self):
         render = Render()
