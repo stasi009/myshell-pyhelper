@@ -169,7 +169,7 @@ class Automata(StateMachineBase):
         self.__states = {}
         self.__context = {}
         
-    def add_global_var(self,name,value=''):
+    def declare_global_var(self,name,value=''):
         self.__context[name] = value
 
     def add_state(self, state: AtomicState, initial: bool) -> None:
