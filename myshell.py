@@ -130,7 +130,7 @@ class AtomicState:
     def render(self, render: Render) -> None:
         self.__render = render
 
-    def transit(self, action, new_state):
+    def transit(self, action, new_state: str | ConditionTransition) -> None:
         if isinstance(action, Action):
             action = action.name
         self.__transitions[action] = new_state
