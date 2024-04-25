@@ -1,6 +1,6 @@
 {
   "type": "automata",
-  "id": "variable_expression_demo",
+  "id": "variable_expression_demo_rebuild",
   "initial": "home_page_state",
   "inputs": {},
   "outputs": {},
@@ -26,6 +26,7 @@
           "default_value": "1743159010695057408"
         }
       },
+      "tasks": [],
       "outputs": {
         "context.intro_message": "{{intro_message}}",
         "context.tts_widget_id": "{{tts_widget_id}}"
@@ -45,6 +46,11 @@
       }
     },
     "intro_message_state": {
+      "inputs": {},
+      "tasks": [],
+      "outputs": {
+        "context.memory": "{{[]}}"
+      },
       "render": {
         "text": "{{context.intro_message}}",
         "buttons": [
@@ -54,9 +60,6 @@
             "on_click": "go_home"
           }
         ]
-      },
-      "outputs": {
-        "context.memory": "{{[]}}"
       },
       "transitions": {
         "CHAT": "chat_page_state"

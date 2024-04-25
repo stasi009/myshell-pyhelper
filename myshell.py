@@ -184,6 +184,7 @@ class Automata(StateMachineBase):
             "initial": self.__init_state,
             "inputs": self._inputs,
             "outputs": self._outputs,
+            "context":self.__context,
             "transitions": self._transitions,
             "states": self.__states,
         }

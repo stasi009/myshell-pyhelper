@@ -42,7 +42,7 @@ class HomepageState:
             self._state.add_output(name=name, value=name, store_context=True)
 
         render = Render()
-        render.add_text("Click 'Start' to chat!")
+        render.add_text("Welcome to this demo. Click 'Start' to chat!")
         render.add_button(
             Button(content="Start Chat", description="Click to Start Chatting.", on_click="start_chat")
         )
@@ -60,7 +60,7 @@ class IntroMessageState:
         self._state.add_output(name="memory", value="[]", store_context=True)
 
         render = Render()
-        render.add_text("Hi, welcome to the Pro Config tutorial. How can I assist you today?")
+        render.add_text("{{context.intro_message}}")
         render.add_button(
             # transition for 'go_home' is defined in automata
             Button(content="Home", description="Click to Go Back to Home.", on_click="go_home")
@@ -130,7 +130,7 @@ class ChatPageState:
 
 
 def main():
-    automata = Automata("variable_expression_demo")
+    automata = Automata("variable_expression_demo_rebuild")
 
     for name in ["intro_message", "tts_widget_id", "memory"]:
         automata.declare_global_var(name)
