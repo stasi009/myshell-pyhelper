@@ -4,6 +4,7 @@
   "initial": "home_page_state",
   "inputs": {},
   "outputs": {},
+  "context": {},
   "transitions": {
     "go_home": "home_page_state"
   },
