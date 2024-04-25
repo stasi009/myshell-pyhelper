@@ -1,4 +1,4 @@
-from myshell import Button, Render, AtomicState, Input,InputType, Automata
+from myshell import *
 import json
 
 
@@ -7,8 +7,12 @@ def test_render():
     render = Render()
     render.add_text("Hello World! Welcome to this demo. Click 'Start' to chat!")
 
-    btn = Button(content="Start", description="Click to Start.", on_click="start_demo")
-    render.add_button(btn)
+    btn1 = Button(content="Start", description="Click to Start.", on_click="start_demo")
+    render.add_button(btn1)
+
+    event = Event(event="check_answer", payload={"chosen_answer": "B"})
+    btn2 = Button(content="B", description="Choose B", on_click=event)
+    render.add_button(btn2)
 
     print(json.dumps(render.to_dict(), indent=4))
 
@@ -50,38 +54,37 @@ class TestAtomicState1:
             default_value="https://app.myshell.ai/widget/mEjUNr",
         )
         self._state.add_input(tts_widget_url)
-        
+
     def __add_outputs(self):
-        self._state.add_output(name='intro_message',value='intro_message',store_context=False)
-        self._state.add_output(name='voice_id',value='tts_widget_url',store_context=False)
-        
+        self._state.add_output(name="intro_message", value="intro_message", store_context=False)
+        self._state.add_output(name="voice_id", value="tts_widget_url", store_context=False)
+
     def __render(self):
         render = Render()
         render.add_text("Hello World! Welcome to this demo. Click 'Start' to chat!")
 
         btn = Button(content="Start", description="Click to Start.", on_click="start_demo")
         render.add_button(btn)
-        
+
         self._state.render(render)
-        
+
     def __add_transitions(self):
-        self._state.transit(trigger='start_demo',new_state='home_page_state')
-        
+        self._state.transit(trigger="start_demo", new_state="home_page_state")
+
     def run(self):
-        """ inputs -> tasks -> outputs -> render
-        """
+        """inputs -> tasks -> outputs -> render"""
         self.__add_inputs()
         self.__add_outputs()
         self.__render()
         self.__add_transitions()
-        
-        automata = Automata(name='hello_demo')
-        automata.add_state(self._state,initial=True)
-        
-        automata.compile('temp.json')
+
+        automata = Automata(name="hello_demo")
+        automata.add_state(self._state, initial=True)
+
+        automata.compile("temp.json")
 
 
 if __name__ == "__main__":
-    # test_render()
+    test_render()
     # test_atomic_state()
-    TestAtomicState1().run()
+    # TestAtomicState1().run()

@@ -26,13 +26,16 @@ class InputType(Enum):
     text = 1  # user will be prompted to input data
     IM = 2  # This allows the bot to take input in the form of messages sent to the bot.
 
+@dataclass
+class Event:
+    event:str 
+    payload:dict[str,str]
 
 @dataclass
 class Button:
     content: str
     description: str
-    on_click: str
-
+    on_click: str | Event
 
 class Render:
     def __init__(self) -> None:
