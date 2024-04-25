@@ -51,45 +51,6 @@ class Input:
         del d["name"]
         return d
 
-
-class AtomicState:
-    def __init__(self, name: str) -> None:
-        self.__name = name
-        self.__inputs = {}
-        self.__outputs = {}
-        self.__tasks = []
-        self.__render: Render = None
-        self.__transitions = {}
-
-    def render(self, render: Render) -> None:
-        self.__render = render
-
-    @property
-    def name(self) -> str:
-        return self.__name
-
-    def transit(self, action, new_state):
-        self.__transitions[action] = new_state
-
-    def input(self, input: Input) -> None:
-        self.__inputs[input.name] = input.value_dict()
-
-    def output(self, name: str, value: str, store_context: bool) -> None:
-        if store_context:
-            name = "context." + name
-        self.__outputs[name] = "{{" + value + "}}"
-
-    def to_dict(self) -> dict[str, Any]:
-        """inputs -> tasks -> outputs -> render"""
-        return {
-            "inputs": self.__inputs,
-            "tasks": self.__tasks,
-            "outputs": self.__outputs,
-            "render": self.__render.to_dict(),
-            "transitions": self.__transitions,
-        }
-
-
 @dataclass
 class Module:
     name: str
@@ -106,6 +67,48 @@ class Module:
         ):
             raise ValueError("Unsupported Module Type")
 
+class AtomicState:
+    def __init__(self, name: str) -> None:
+        self.__name = name
+        self.__inputs = {}
+        self.__outputs = {}
+        self.__tasks = [] # Tasks contain multiple modules that execute sequentially
+        self.__render: Render = None
+        self.__transitions = {}
+
+    def render(self, render: Render) -> None:
+        self.__render = render
+
+    @property
+    def name(self) -> str:
+        return self.__name
+
+    def transit(self, action, new_state):
+        self.__transitions[action] = new_state
+
+    def add_input(self, input: Input) -> None:
+        self.__inputs[input.name] = input.value_dict()
+        
+    def add_task(self,module:Module):
+        """ Tasks contain multiple modules that execute sequentially
+        """
+        self.__tasks.append(asdict(module))
+        
+
+    def add_output(self, name: str, value: str, store_context: bool) -> None:
+        if store_context:
+            name = "context." + name
+        self.__outputs[name] = "{{" + value + "}}"
+
+    def to_dict(self) -> dict[str, Any]:
+        """inputs -> tasks -> outputs -> render"""
+        return {
+            "inputs": self.__inputs,
+            "tasks": self.__tasks,
+            "outputs": self.__outputs,
+            "render": self.__render.to_dict(),
+            "transitions": self.__transitions,
+        }
 
 class Automata:
     def __init__(self, name) -> None:
