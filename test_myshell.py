@@ -78,7 +78,7 @@ class TestAtomicState1:
         automata = Automata(name='hello_demo')
         automata.add_state(self._state,initial=True)
         
-        print(json.dumps(automata.to_dict(), indent=4))
+        automata.compile('temp.json')
 
 
 if __name__ == "__main__":

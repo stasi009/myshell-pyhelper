@@ -1,5 +1,7 @@
 from dataclasses import dataclass, asdict
 from typing import Any
+from pathlib import Path
+import json
 
 
 @dataclass
@@ -95,8 +97,8 @@ class Automata:
         self.__outputs = {}
         self.__transitions = {}
         self.__states = {}
-        
-    def add_state(self,state:AtomicState,initial:bool) -> None:
+
+    def add_state(self, state: AtomicState, initial: bool) -> None:
         self.__states[state.name] = state.to_dict()
         if initial:
             self.__init_state = state.name
@@ -105,9 +107,13 @@ class Automata:
         return {
             "type": "automata",
             "id": self.__name,
-            "initial":self.__init_state,
+            "initial": self.__init_state,
             "inputs": {},
             "outputs": {},
             "transitions": {},
-            "states":self.__states
+            "states": self.__states,
         }
+
+    def compile(self, outfname: str | Path) -> None:
+        with open(outfname, mode="wt") as fout:
+            json.dump(self.to_dict(), fout, indent=4)
