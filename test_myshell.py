@@ -1,4 +1,4 @@
-from myshell import Button, Render, AtomicState
+from myshell import Button, Render, AtomicState,Input
 import json
 
 
@@ -28,10 +28,17 @@ def test_atomic_state():
     
     print(json.dumps(state.to_dict(),indent=4))
 
+def test_input():
+    intro_message = Input(name='intro_message',
+                          type='text',
+                          user_input=True,
+                          default_value='Hi, this is your Pro Config Tutorial Bot')
+    print(intro_message)
     
     
 
 
 if __name__ == "__main__":
     # test_render()
-    test_atomic_state()
+    # test_atomic_state()
+    test_input()
