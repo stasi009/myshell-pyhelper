@@ -109,6 +109,8 @@ class AtomicState:
         self.__outputs = {}
         self.__tasks = []  # Tasks contain multiple modules that execute sequentially
         self.__render: Render = None
+        # If a transition is defined in an AtomicState, 
+        # it will only handle the action triggered in that AtomicState 
         self.__transitions = {}
 
     @property
@@ -151,6 +153,7 @@ class Automata:
         self.__name = name
         self.__inputs = {}
         self.__outputs = {}
+        # if a transition is defined in the Automata, it will handle the actions in all its states
         self.__transitions = {}
         self.__states = {}
 
