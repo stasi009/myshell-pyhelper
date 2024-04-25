@@ -17,7 +17,7 @@ class Builder:
         self._state.add_task(
             Module(
                 name="generate_reply",
-                module_type=ModuleType.AnyWidget,
+                module_type=ModuleType.AnyWidgetModule,
                 module_config={
                     "widget_id": "1744214024104448000",
                     "system_prompt": "You are a teacher teaching Pro Config.",
@@ -30,7 +30,7 @@ class Builder:
         self._state.add_task(
             Module(
                 name="generate_voice",
-                module_type=ModuleType.AnyWidget,
+                module_type=ModuleType.AnyWidgetModule,
                 module_config={
                     "content": "{{reply}}",
                     "widget_id": "1743159010695057408",

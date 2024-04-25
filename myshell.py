@@ -160,4 +160,4 @@ class Automata:
 
     def compile(self, outfname: str | Path) -> None:
         with open(outfname, mode="wt") as fout:
-            json.dump(self.to_dict(), fout, indent=4)
+            json.dump(self.to_dict(), fout, indent=2)
