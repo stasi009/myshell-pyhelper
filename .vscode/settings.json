@@ -1,5 +1,6 @@
 {
     "files.autoSave": "onFocusChange",
+    "explorer.sortOrder": "type",
     "jupyter.interactiveWindow.textEditor.executeSelection": true,
     "files.exclude": {
         "**/*.pdf": true,
