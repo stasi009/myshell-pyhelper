@@ -90,6 +90,23 @@ class AtomicState:
         }
 
 
+@dataclass
+class Module:
+    name: str
+    module_type: str
+    module_config: dict[str, str]
+
+    def __post_init__(self):
+        if self.module_type not in (
+            "AnyWidgetModule",
+            "LLMModule",
+            "LLMFunctionModule",
+            "TtsModule",
+            "GoogleSearchModule",
+        ):
+            raise ValueError("Unsupported Module Type")
+
+
 class Automata:
     def __init__(self, name) -> None:
         self.__name = name
