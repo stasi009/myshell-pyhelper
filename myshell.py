@@ -90,6 +90,18 @@ class Module:
         }
 
 
+class ConditionTransition:
+    def __init__(self) -> None:
+        self._transits = []
+
+    def append(self, target, condition):
+        self._transits.append({"target": target, "condition": condition})
+
+    @property
+    def transition(self):
+        return self._transits
+
+
 class AtomicState:
     def __init__(self, name: str) -> None:
         self.__name = name
@@ -99,17 +111,9 @@ class AtomicState:
         self.__render: Render = None
         self.__transitions = {}
 
-    def render(self, render: Render) -> None:
-        self.__render = render
-
     @property
     def name(self) -> str:
         return self.__name
-
-    def transit(self, action, new_state):
-        if isinstance(action, Action):
-            action = action.name
-        self.__transitions[action] = new_state
 
     def add_input(self, input: Input) -> None:
         self.__inputs[input.name] = input.value_dict()
@@ -122,6 +126,14 @@ class AtomicState:
         if store_context:
             name = "context." + name
         self.__outputs[name] = "{{" + value + "}}"
+
+    def render(self, render: Render) -> None:
+        self.__render = render
+
+    def transit(self, action, new_state):
+        if isinstance(action, Action):
+            action = action.name
+        self.__transitions[action] = new_state
 
     def to_dict(self) -> dict[str, Any]:
         """inputs -> tasks -> outputs -> render"""
