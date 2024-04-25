@@ -66,10 +66,6 @@ class Input:
     user_input: bool
     default_value: str = None
 
-    def __post_init__(self):
-        if self.type not in ("text", "IM"):
-            raise ValueError("input type can only be text or IM")
-
     def value_dict(self) -> dict[str, Any]:
         d = {
             "type": self.type.name,
