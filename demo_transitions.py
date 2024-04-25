@@ -103,7 +103,7 @@ def main():
     # Transition defined in the Automata, it will handle the actions in all its states
     automata.transit(action="go_home", new_state=States.home_page_state)
 
-    automata.compile("temp.json")
+    automata.compile(Path(__file__).with_suffix(".json"))
 
 if __name__ == "__main__":
     main()
