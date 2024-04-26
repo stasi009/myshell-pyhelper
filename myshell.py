@@ -217,7 +217,7 @@ class StateBuilderBase:
     def _add_outputs(self):
         pass 
     
-    def _render(render:Render):
+    def _render(self,render:Render):
         pass 
     
     def _add_transitions(self):
