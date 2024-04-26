@@ -1,19 +1,7 @@
 # https://docs.myshell.ai/product-manual/create/pro-config-mode-beta/tutorial/an-advanced-example
 
 from myshell import *
-from enum import Enum
 
-
-class States(Enum):
-    home_page_state = 1
-    quiz_page_state = 2
-    analyze_answer_state = 3
-    correct_answer_state = 4
-    wrong_answer_state = 5
-    continue_state = 6
-    finish_state = 7
-    review_state = 8
-    chat_page_state = 9
 
 
 class HomepageState:
@@ -74,14 +62,14 @@ class QuizPageState:
 
         for option in ["A", "B", "C", "D"]:
             event = Event(event="check_answer", payload={"chosen_answer": f"{option}"})
-            render.add_button(
-                Button(content=f"{option}.", description=f"Choose {option}.", on_click=event)
-            )
-            
+            render.add_button(Button(content=f"{option}.", description=f"Choose {option}.", on_click=event))
+
         self._state.render(render)
         # --------- end render
-        
-        target = TransitTarget(target = )
 
+        target = TransitTarget(
+            target=States.analyze_answer_state, target_inputs={"chosen_answer": "{{payload.chosen_answer}}"}
+        )
+        self._state.transit(trigger="check_answer", new_state=target)
         
-        
+        return self._state
