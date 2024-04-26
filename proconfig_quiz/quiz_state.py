@@ -9,6 +9,10 @@ class QuizPageState:
         self._state = AtomicState(name=States.quiz_page_state)
 
     def build(self):
+        self._state.add_output(name='correct_answer',
+                               value="{{context.questions[context.question_idx]['answer']}}",
+                               store_context=True)
+        
         # --------- render
         render = Render()
         render.add_text(
