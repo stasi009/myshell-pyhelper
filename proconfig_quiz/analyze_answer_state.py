@@ -19,6 +19,13 @@ class AnalyzeAnswerState:
         
         render = Render()
         render.add_text("Check answer state.")
+        self._state.render(render)
         
-        # ALWAYS: triggered when an AtomicState has finished. Usually used to connect two consecutive states.
         conditions = ConditionTransit()
+        conditions.append(target=States.correct_answer_state,condition="{{context.is_correct}}")
+        conditions.append(target=States.wrong_answer_state,condition="{{true}}")# if not correct, this second condition will always match
+        # ALWAYS: triggered when an AtomicState has finished. Usually used to connect two consecutive states.
+        self._state.transit(trigger=Trigger.ALWAYS,new_state=conditions)
+        
+        return self._state
+        

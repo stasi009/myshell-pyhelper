@@ -98,6 +98,7 @@ class Module:
 
 class ConditionTransit:
     def __init__(self) -> None:
+        # each condition is checked sequentially, so it must be a list
         self._transits = []
 
     def append(self, target, condition):
