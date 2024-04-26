@@ -102,11 +102,14 @@ class ConditionTransit:
         self._transits = []
 
     def append(self, target, condition):
-        _target = None 
+        _target = None
         match target:
-            case str(): _target = target    
-            case Enum(): _target = target.name  
-            case _ : raise TypeError("Unsupported Target Type")
+            case str():
+                _target = target
+            case Enum():
+                _target = target.name
+            case _:
+                raise TypeError("Unsupported Target Type")
         self._transits.append({"target": _target, "condition": condition})
 
     @property
@@ -199,6 +202,39 @@ class AtomicState(StateMachineBase):
             d["render"] = self.__render.to_dict()
 
         return d
+
+
+class StateBuilderBase:
+    def __init__(self, name: str | Enum) -> None:
+        self._state = AtomicState(name)
+
+    def _add_inputs(self):
+        pass
+
+    def _add_tasks(self):
+        pass
+    
+    def _add_outputs(self):
+        pass 
+    
+    def _render(render:Render):
+        pass 
+    
+    def _add_transitions(self):
+        pass
+
+    def build(self):
+        self._add_inputs()
+        self._add_tasks()
+        self._add_outputs()
+        
+        render = Render()
+        self._render(render)
+        self._state.render(render)
+        
+        self._add_transitions()
+        
+        return self._state
 
 
 class Automata(StateMachineBase):
