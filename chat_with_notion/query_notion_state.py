@@ -17,24 +17,27 @@ class QueryNotionState(StateBuilderBase):
         self._state.add_input(_input)
 
     def _add_tasks(self):
-        task = Module(
-            name="query_notion",
-            module_type=ModuleType.AnyWidgetModule,
-            module_config={
-                "widget_id": "1782389035948912640",
-                "url": "{{notion_url}}",
-                "action": "query_all",
-                "output_name": "notion_content",
-            }
+        self._state.add_task(
+            Module(
+                name="query_notion",
+                module_type=ModuleType.AnyWidgetModule,
+                module_config={
+                    "widget_id": "1782389035948912640",
+                    "url": "{{notion_url}}",
+                    "action": "query_all",
+                    "output_name": "notion_content",
+                },
+            )
         )
-        self._add_tasks(task)
-        
+
     def _add_outputs(self):
-        self._state.add_output(name='notion_content',value='notion_content',store_context=True)
+        self._state.add_output(
+            name="notion_content", value="{{JSON.stringify(notion_content)}}", store_context=True
+        )
 
     def _render(self, render: Render):
         render.add_text("{{JSON.stringify(notion_content)}}")
-        render.add_button(Button(content="Chat", on_click="chat"))
-        
+        render.add_button(Button(content="Chat", description="", on_click="chat"))
+
     def _add_transitions(self):
-        self._state.transit(trigger='chat',new_state=States.chat_notion)
+        self._state.transit(trigger="chat", new_state=States.chat_notion)

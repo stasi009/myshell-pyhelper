@@ -5,7 +5,8 @@ from chat_with_notion.constants import States
 
 def main():
     automata = Automata("chat_with_notion")
-
+    
+    automata.declare_global_var(name='notion_content')
 
     for state_cls in [
         QueryNotionState

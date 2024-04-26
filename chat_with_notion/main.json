@@ -15,11 +15,33 @@
           "default_value": "https://myshellai.notion.site/7f0dc468d15a4810ac9a1caa7799da7a?v=a8830827ab584b70b939015d9e76bbb2&pvs=4"
         }
       },
-      "tasks": [],
-      "outputs": {},
-      "transitions": {},
+      "tasks": [
+        {
+          "name": "query_notion",
+          "module_type": "AnyWidgetModule",
+          "module_config": {
+            "widget_id": "1782389035948912640",
+            "url": "{{notion_url}}",
+            "action": "query_all",
+            "output_name": "notion_content"
+          }
+        }
+      ],
+      "outputs": {
+        "context.notion_content": "{{notion_content}}"
+      },
+      "transitions": {
+        "chat": "chat_notion"
+      },
       "render": {
-        "text": "{{notion_url}}"
+        "text": "{{JSON.stringify(notion_content)}}",
+        "buttons": [
+          {
+            "content": "Chat",
+            "description": "",
+            "on_click": "chat"
+          }
+        ]
       }
     }
   }
