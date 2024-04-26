@@ -84,7 +84,31 @@ class TestAtomicState1:
         automata.compile("temp.json")
 
 
+class States(Enum):
+    state1 = 1
+    state2 = 2
+    state3 = 3
+
+
+def test_transition():
+    state = AtomicState(States.state1)
+
+    state.transit(trigger="x1", new_state="yyy")
+    state.transit(trigger="x2", new_state=States.state3)
+
+    condition = ConditionTransition()
+    condition.append(target="c1", condition="c2")
+    condition.append(target="c3", condition="c4")
+    state.transit(trigger="x3", new_state=condition)
+
+    target = TransitTarget(target="tt", target_inputs={"a": "b"})
+    state.transit(trigger="x8", new_state=target)
+
+    print(json.dumps(state.to_dict(), indent=2))
+
+
 if __name__ == "__main__":
-    test_render()
+    # test_render()
+    test_transition()
     # test_atomic_state()
     # TestAtomicState1().run()

@@ -59,19 +59,29 @@ class HomepageState:
         self._state.render(render)
 
         return self._state
-    
+
+
 class QuizPageState:
     def __init__(self) -> None:
         self._state = AtomicState(name=States.quiz_page_state)
 
     def build(self):
+        # --------- render
         render = Render()
-        render.add_text("{{context.question_idx + 1}}. {{context.questions[context.question_idx]['question']}}")
-        
-        for option in ['A','B','C','D']:
-            render.add_button(Button(content=f"{option}.", 
-                                     description=f"Choose {option}.", 
-                                     on_click="get_quiz"))
+        render.add_text(
+            "{{context.question_idx + 1}}. {{context.questions[context.question_idx]['question']}}"
+        )
+
+        for option in ["A", "B", "C", "D"]:
+            event = Event(event="check_answer", payload={"chosen_answer": f"{option}"})
+            render.add_button(
+                Button(content=f"{option}.", description=f"Choose {option}.", on_click=event)
+            )
             
         self._state.render(render)
+        # --------- end render
+        
+        target = TransitTarget(target = )
+
+        
         

@@ -182,13 +182,17 @@ class AtomicState(StateMachineBase):
 
     def to_dict(self) -> dict[str, Any]:
         """inputs -> tasks -> outputs -> render"""
-        return {
+        d = {
             "inputs": self._inputs,
             "tasks": self.__tasks,
             "outputs": self._outputs,
-            "render": self.__render.to_dict(),
             "transitions": self._transitions,
         }
+
+        if self.__render is not None:
+            d["render"] = self.__render.to_dict()
+
+        return d
 
 
 class Automata(StateMachineBase):
