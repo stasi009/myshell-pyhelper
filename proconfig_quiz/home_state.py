@@ -1,5 +1,5 @@
-from ..myshell import *
-from .constants import States
+from myshell import *
+from proconfig_quiz.constants import States
 
 
 class HomepageState:

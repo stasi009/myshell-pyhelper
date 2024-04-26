@@ -1,6 +1,7 @@
 # https://docs.myshell.ai/product-manual/create/pro-config-mode-beta/tutorial/an-advanced-example
 
-
+from myshell import *
+from proconfig_quiz.constants import States
 
 
 class QuizPageState:

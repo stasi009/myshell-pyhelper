@@ -1,5 +1,6 @@
 from myshell import *
 import json
+from proconfig_quiz import home_state
 
 
 def test_render():
@@ -107,8 +108,15 @@ def test_transition():
     print(json.dumps(state.to_dict(), indent=2))
 
 
+def test_proconfig_quize_states():
+    builder = home_state.HomepageState()
+    state = builder.build()
+    print(json.dumps(state.to_dict(), indent=2))
+
+
 if __name__ == "__main__":
     # test_render()
-    test_transition()
+    # test_transition()
     # test_atomic_state()
     # TestAtomicState1().run()
+    test_proconfig_quize_states()
