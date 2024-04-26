@@ -1,7 +1,5 @@
 from myshell import *
 from chat_with_notion.constants import States
-from myshell import Render
-
 
 class QueryNotionState(StateBuilderBase):
     def __init__(self) -> None:
@@ -32,7 +30,7 @@ class QueryNotionState(StateBuilderBase):
 
     def _add_outputs(self):
         self._state.add_output(
-            name="notion_content", value="{{JSON.stringify(notion_content)}}", store_context=True
+            name="notion_content", value="{{JSON.stringify(notion_content['data'])}}", store_context=True
         )
 
     def _render(self, render: Render):

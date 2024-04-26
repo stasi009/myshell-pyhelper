@@ -4,7 +4,10 @@
   "initial": "query_notion",
   "inputs": {},
   "outputs": {},
-  "context": {},
+  "context": {
+    "notion_content": "",
+    "memory": "{{[]}}"
+  },
   "transitions": {},
   "states": {
     "query_notion": {
@@ -28,7 +31,7 @@
         }
       ],
       "outputs": {
-        "context.notion_content": "{{notion_content}}"
+        "context.notion_content": "{{JSON.stringify(notion_content['data'])}}"
       },
       "transitions": {
         "chat": "chat_notion"
@@ -42,6 +45,36 @@
             "on_click": "chat"
           }
         ]
+      }
+    },
+    "chat_notion": {
+      "inputs": {
+        "user_message": {
+          "type": "IM",
+          "user_input": true
+        }
+      },
+      "tasks": [
+        {
+          "name": "generate_reply",
+          "module_type": "AnyWidgetModule",
+          "module_config": {
+            "widget_id": "1744214024104448000",
+            "system_prompt": "You are given an address book which is in JSON format. Its content is as follow: \n{{context.notion_content}}.\n Please answer questions based on the content in this address book.",
+            "user_prompt": "{{user_message}}",
+            "memory": "{{context.memory}}",
+            "output_name": "reply"
+          }
+        }
+      ],
+      "outputs": {
+        "context.memory": "{{[...context.memory, {'user': user_message}, {'assistant': reply}]}}"
+      },
+      "transitions": {
+        "CHAT": "chat_notion"
+      },
+      "render": {
+        "text": "{{reply}}"
       }
     }
   }
