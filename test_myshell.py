@@ -110,8 +110,8 @@ def test_transition():
 
 def test_proconfig_quize_states():
     # builder = home_state.HomepageState()
-    builder = quiz_state.QuizPageState()
-    # builder = analyze_answer_state.AnalyzeAnswerState()
+    # builder = quiz_state.QuizPageState()
+    builder = analyze_answer_state.ContinueState()
 
     state = builder.build()
     print(json.dumps(state.to_dict(), indent=2))
