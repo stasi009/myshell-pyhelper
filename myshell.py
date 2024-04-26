@@ -36,7 +36,7 @@ class Event:
 @dataclass
 class Button:
     content: str
-    description: str
+    description: str = ""
     on_click: str | Event
 
 

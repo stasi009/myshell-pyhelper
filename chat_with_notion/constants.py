@@ -1,5 +1,5 @@
 from enum import Enum
 
 class States(Enum):
-    QueryNotion = 1
-    QA = 2
+    query_notion = 1
+    chat_notion = 2

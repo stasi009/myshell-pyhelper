@@ -1,0 +1,26 @@
+{
+  "type": "automata",
+  "id": "chat_with_notion",
+  "initial": "query_notion",
+  "inputs": {},
+  "outputs": {},
+  "context": {},
+  "transitions": {},
+  "states": {
+    "query_notion": {
+      "inputs": {
+        "notion_url": {
+          "type": "text",
+          "user_input": false,
+          "default_value": "https://myshellai.notion.site/7f0dc468d15a4810ac9a1caa7799da7a?v=a8830827ab584b70b939015d9e76bbb2&pvs=4"
+        }
+      },
+      "tasks": [],
+      "outputs": {},
+      "transitions": {},
+      "render": {
+        "text": "{{notion_url}}"
+      }
+    }
+  }
+}
