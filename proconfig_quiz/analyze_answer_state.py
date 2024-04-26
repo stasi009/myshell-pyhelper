@@ -18,6 +18,10 @@ class AnalyzeAnswerState:
             name="is_correct", value="{{chosen_answer == context.correct_answer}}", store_context=True
         )
 
+        render = Render()
+        render.add_text("Check answer state.")
+        self._state.render(render)
+
         conditions = ConditionTransit()
         conditions.append(target=States.correct_answer_state, condition="{{context.is_correct}}")
         conditions.append(
@@ -25,10 +29,6 @@ class AnalyzeAnswerState:
         )  # if not correct, this second condition will always match
         # ALWAYS: triggered when an AtomicState has finished. Usually used to connect two consecutive states.
         self._state.transit(trigger=Trigger.ALWAYS, new_state=conditions)
-        
-        render = Render()
-        render.add_text("Check answer state.")
-        self._state.render(render)
 
         return self._state
 
@@ -81,6 +81,10 @@ class ContinueState:
         self._state = AtomicState(States.continue_state)
 
     def build(self):
+        render = Render()
+        render.add_text("Click to Next Question")
+        self._state.render(render)
+
         conditions = ConditionTransit()
         conditions.append(target=States.quiz_page_state, condition="{{context.question_idx > 0}}")
         conditions.append(
@@ -91,10 +95,6 @@ class ContinueState:
         )  # here condition=true, because it's last condition, like Else
         # triggered when an AtomicState has finished. Usually used to connect two consecutive states.
         self._state.transit(trigger=Trigger.ALWAYS, new_state=conditions)
-        
-        render = Render()
-        render.add_text("Click to Next Question")
-        self._state.render(render)
 
         return self._state
 
@@ -109,18 +109,19 @@ class FinishState:
         render.add_button(Button(content="Home", description="Back to Home", on_click="go_home"))
         self._state.render(render)
         return self._state
-        
+
+
 class ReviewState:
     def __init__(self) -> None:
         self._state = AtomicState(States.review_state)
-    
+
     def build(self):
-        self._state.add_output(name='memory',value='[]',store_context=True)
-        
-        self._state.transit(trigger=Trigger.CHAT, new_state=States.chat_page_state)
-        
+        self._state.add_output(name="memory", value="[]", store_context=True)
+
         render = Render()
         render.add_text("{{context.intro_message}}")
         self._state.render(render)
-                
+
+        self._state.transit(trigger=Trigger.CHAT, new_state=States.chat_page_state)
+
         return self._state
