@@ -51,7 +51,7 @@ class CorrectAnswerState:
         render.add_text("Congratulations! You have chosen the correct answer {{context.correct_answer}}")
         render.add_button(Button(content="Continue", description="continue", on_click="continue"))
         self._state.render(render)
-        
+
         return self._state
 
 
@@ -67,26 +67,59 @@ class WrongAnswerState:
         )
 
         render = Render()
-        render.add_text("Oh No! The chosen answer is {{context.chosen_answer}}, while the correct one is {{context.correct_answer}}.",)
+        render.add_text(
+            "Oh No! The chosen answer is {{context.chosen_answer}}, while the correct one is {{context.correct_answer}}.",
+        )
         render.add_button(Button(content="Continue", description="continue", on_click="continue"))
         self._state.render(render)
 
         return self._state
-    
+
+
 class ContinueState:
     def __init__(self) -> None:
         self._state = AtomicState(States.continue_state)
-        
+
     def build(self):
         render = Render()
         render.add_text("Click to Next Question")
         self._state.render(render)
-        
+
         conditions = ConditionTransit()
         conditions.append(target=States.quiz_page_state, condition="{{context.question_idx > 0}}")
-        conditions.append(target=States.finish_state,condition="{{context.correct_count == context.questions.length}}")
-        conditions.append(target=States.review_state,condition="{{true}}")# here condition=true, because it's last condition, like Else
+        conditions.append(
+            target=States.finish_state, condition="{{context.correct_count == context.questions.length}}"
+        )
+        conditions.append(
+            target=States.review_state, condition="{{true}}"
+        )  # here condition=true, because it's last condition, like Else
         # triggered when an AtomicState has finished. Usually used to connect two consecutive states.
         self._state.transit(trigger=Trigger.ALWAYS, new_state=conditions)
+
+        return self._state
+
+
+class FinishState:
+    def __init__(self) -> None:
+        self._state = AtomicState(States.finish_state)
+
+    def build(self):
+        render = Render()
+        render.add_text("Congratulations! You are now a master of Pro Config!")
+        render.add_button(Button(content="Home", description="Back to Home", on_click="go_home"))
+        self._state.render(render)
+        
+class ReviewState:
+    def __init__(self) -> None:
+        self._state = AtomicState(States.review_state)
+    
+    def build(self):
+        self._state.add_output(name='memory',value='[]',store_context=True)
+        
+        render = Render()
+        render.add_text("{{context.intro_message}}")
+        self._state.render(render)
+        
+        self._state.transit(trigger=Trigger.CHAT, new_state=States.chat_page_state)
         
         return self._state
