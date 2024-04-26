@@ -1,6 +1,6 @@
 from myshell import *
 import json
-from proconfig_quiz import home_state
+from proconfig_quiz import home_state,quiz_state
 
 
 def test_render():
@@ -97,7 +97,7 @@ def test_transition():
     state.transit(trigger="x1", new_state="yyy")
     state.transit(trigger="x2", new_state=States.state3)
 
-    condition = ConditionTransition()
+    condition = ConditionTransit()
     condition.append(target="c1", condition="c2")
     condition.append(target="c3", condition="c4")
     state.transit(trigger="x3", new_state=condition)
@@ -109,7 +109,9 @@ def test_transition():
 
 
 def test_proconfig_quize_states():
-    builder = home_state.HomepageState()
+    # builder = home_state.HomepageState()
+    builder = quiz_state.QuizPageState()
+
     state = builder.build()
     print(json.dumps(state.to_dict(), indent=2))
 

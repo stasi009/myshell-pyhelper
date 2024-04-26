@@ -96,7 +96,7 @@ class Module:
         }
 
 
-class ConditionTransition:
+class ConditionTransit:
     def __init__(self) -> None:
         self._transits = []
 
@@ -148,7 +148,7 @@ class StateMachineBase:
 
         self._outputs[name] = value
 
-    def transit(self, trigger, new_state: str | Enum | ConditionTransition | TransitTarget) -> None:
+    def transit(self, trigger, new_state: str | Enum | ConditionTransit | TransitTarget) -> None:
         if isinstance(trigger, Trigger):
             trigger = trigger.name
 
@@ -158,7 +158,7 @@ class StateMachineBase:
                 _new_state = new_state
             case Enum():
                 _new_state = new_state.name
-            case ConditionTransition():
+            case ConditionTransit():
                 _new_state = new_state.transition
             case TransitTarget():
                 _new_state = asdict(new_state)

@@ -6,7 +6,7 @@
         "**/*.pdf": true,
         "**/*.docx": true,
         ".ipynb_checkpoints":true,
-        "__pycache__": true
+        "**/__pycache__": true
     },
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
