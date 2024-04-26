@@ -26,16 +26,19 @@ class InputType(Enum):
     text = 1  # user will be prompted to input data
     IM = 2  # This allows the bot to take input in the form of messages sent to the bot.
 
+
 @dataclass
 class Event:
-    event:str 
-    payload:dict[str,str]
+    event: str
+    payload: dict[str, str]
+
 
 @dataclass
 class Button:
     content: str
     description: str
     on_click: str | Event
+
 
 class Render:
     def __init__(self) -> None:
@@ -105,6 +108,16 @@ class ConditionTransition:
         return self._transits
 
 
+@dataclass
+class TransitTarget:
+    target: str | Enum
+    target_inputs: dict[str, str]
+
+    def __post_init__(self):
+        if isinstance(self.target, Enum):
+            self.target = self.target.name
+
+
 class StateMachineBase:
     def __init__(self, name: str) -> None:
         self._name = name
@@ -129,17 +142,29 @@ class StateMachineBase:
         """
         if store_context:
             name = "context." + name
-            
+
         if not value.startswith("{{"):
             value = "{{" + value + "}}"
-            
+
         self._outputs[name] = value
 
-    def transit(self, trigger, new_state: str | ConditionTransition | Enum) -> None:
+    def transit(self, trigger, new_state: str | Enum | ConditionTransition | TransitTarget) -> None:
         if isinstance(trigger, Trigger):
             trigger = trigger.name
 
-        self._transitions[trigger] = new_state.name if isinstance(new_state, Enum) else new_state
+        _new_state = None
+        match new_state:
+            case str():
+                _new_state = new_state
+            case Enum():
+                _new_state = new_state.name
+            case ConditionTransition():
+                _new_state = new_state.transition
+            case TransitTarget():
+                _new_state = asdict(new_state)
+            case _:
+                raise TypeError("Unknown State Type")
+        self._transitions[trigger] = _new_state
 
 
 class AtomicState(StateMachineBase):
@@ -171,8 +196,8 @@ class Automata(StateMachineBase):
         super().__init__(name)
         self.__states = {}
         self.__context = {}
-        
-    def declare_global_var(self,name,value=''):
+
+    def declare_global_var(self, name, value=""):
         self.__context[name] = value
 
     def add_state(self, state: AtomicState, initial: bool) -> None:
@@ -187,7 +212,7 @@ class Automata(StateMachineBase):
             "initial": self.__init_state,
             "inputs": self._inputs,
             "outputs": self._outputs,
-            "context":self.__context,
+            "context": self.__context,
             "transitions": self._transitions,
             "states": self.__states,
         }
