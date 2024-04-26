@@ -102,7 +102,12 @@ class ConditionTransit:
         self._transits = []
 
     def append(self, target, condition):
-        self._transits.append({"target": target, "condition": condition})
+        _target = None 
+        match target:
+            case str(): _target = target    
+            case Enum(): _target = target.name  
+            case _ : raise TypeError("Unsupported Target Type")
+        self._transits.append({"target": _target, "condition": condition})
 
     @property
     def transition(self):

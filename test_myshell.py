@@ -114,7 +114,7 @@ def test_proconfig_quize_states():
     builder = analyze_answer_state.AnalyzeAnswerState()
 
     state = builder.build()
-    # print(json.dumps(state.to_dict(), indent=2))
+    print(json.dumps(state.to_dict(), indent=2))
 
 
 if __name__ == "__main__":
